@@ -1,36 +1,37 @@
-package org.soulcave.loganalyzer
 
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
-import scala.collection.mutable.{ListBuffer, Map}
+import scala.collection.mutable
+import scala.collection.mutable.ListBuffer
 
 /**
   * Created by kszos on 15/06/2016.
   */
 class VmStatObject(nodeName: String, date: LocalDateTime) {
 
-  var timeStamp = new ListBuffer[String]()
-  var procs = Map("r" -> new ListBuffer[Number](),
+  var timeStamp = new ListBuffer[LocalDateTime]()
+  var procs = mutable.Map("r" -> new ListBuffer[Number](),
     "b" -> new ListBuffer[Number]())
-  var memory = Map(
+  var memory = mutable.Map(
     "swpd" -> new ListBuffer[Number](),
     "free" -> new ListBuffer[Number](),
     "buff" -> new ListBuffer[Number]())
 
-  var swap = Map(
+  var swap = mutable.Map(
     "si" -> new ListBuffer[Number](),
     "so" -> new ListBuffer[Number](),
     "bi" -> new ListBuffer[Number]()
   )
-  var io = Map(
+  var io = mutable.Map(
     "bi" -> new ListBuffer[Number](),
     "bo" -> new ListBuffer[Number]()
   )
-  var system = Map(
+  var system = mutable.Map(
     "in" -> new ListBuffer[Number](),
     "cs" -> new ListBuffer[Number]()
   )
-  var cpu = Map(
+  var cpu = mutable.Map(
     "us" -> new ListBuffer[Number](),
     "sy" -> new ListBuffer[Number](),
     "id" -> new ListBuffer[Number](),
@@ -38,13 +39,9 @@ class VmStatObject(nodeName: String, date: LocalDateTime) {
     "st" -> new ListBuffer[Number]()
   )
 
-  def getNodeName: Unit = {
-    return nodeName
-  }
+  def getNodeName(): String = nodeName
 
-  def getDate: Unit = {
-    return date
-  }
+  def getDate(): LocalDateTime = date
 
   def addProcs(key: String, value: Number): Unit = {
     procs put(key, procs.get(key).get :+ value)
@@ -71,6 +68,6 @@ class VmStatObject(nodeName: String, date: LocalDateTime) {
   }
 
   def addTimeStamp(time: String): Unit = {
-    this.timeStamp :+ time
+    this.timeStamp = this.timeStamp :+ LocalDateTime.parse(time, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
   }
 }
